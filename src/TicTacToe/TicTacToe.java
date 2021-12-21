@@ -7,13 +7,13 @@ public class TicTacToe {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter cells : ");
+        char[] grid = new char[9];
 
-        String input = sc.nextLine();
+        Arrays.fill(grid, ' ');
 
-        printGrid(input);
+        printGrid(grid);
 
-        while (true) {
+        for (int i = 0; i < 9; i++) {
 
             try {
 
@@ -21,51 +21,84 @@ public class TicTacToe {
 
                 int x = sc.nextInt();
                 int y = sc.nextInt();
-                int target = -1;
+                int target;
 
                 if ((x < 1 || x > 3) || (y < 1 || y > 3)) {
                     System.out.println("Coordinates should be from 1 to 3!");
+                    i--;
+                    continue;
                 } else {
                     if (x == 1) {
                         target = y - x;
                     } else if (x == 2) {
                         target = x + y;
-                    } else if (y == 1) {
-                        target = 6;
-                    } else if (y == 2) {
+                    } else if (y == 1) target = 6;
+                    else if (y == 2) {
                         target = 7;
                     } else {
                         target = 8;
                     }
                 }
 
-                if (target != -1 && input.charAt(target) == '_') {
+                if (grid[target] == ' ') {
 
-                    char[] arr = input.toCharArray();
-                    arr[target] = 'X';
-                    input = String.valueOf(arr);
-                    break;
+                    grid[target] = i % 2 == 0 ? 'X' : 'O';
+                    printGrid(grid);
+
+                    if (xWon(grid)) {
+                        System.out.println("X wins");
+                        return;
+                    } else if (oWon(grid)) {
+                        System.out.println("O wins");
+                        return;
+                    }
                 } else {
                     System.out.println("This cell is occupied! Choose another one!");
+                    i--;
                 }
 
             } catch (InputMismatchException e) {
                 System.out.println("You should enter numbers!");
+                i--;
                 sc.next();
             }
         }
 
-        printGrid(input);
+        System.out.println("Draw!");
     }
 
-    public static void printGrid(String str) {
+    public static void printGrid(char[] grid) {
 
         System.out.println("---------");
 
-        System.out.println("| " + str.charAt(0) + " " + str.charAt(1) + " " + str.charAt(2) + " |");
-        System.out.println("| " + str.charAt(3) + " " + str.charAt(4) + " " + str.charAt(5) + " |");
-        System.out.println("| " + str.charAt(6) + " " + str.charAt(7) + " " + str.charAt(8) + " |");
+        System.out.println("| " + grid[0] + " " + grid[1] + " " + grid[2] + " |");
+        System.out.println("| " + grid[3] + " " + grid[4] + " " + grid[5] + " |");
+        System.out.println("| " + grid[6] + " " + grid[7] + " " + grid[8] + " |");
 
         System.out.println("---------");
+    }
+
+    public static boolean xWon(char[] grid) {
+
+        return (grid[0] == 'X' && grid[1] == 'X' && grid[2] == 'X') ||
+                (grid[3] == 'X' && grid[4] == 'X' && grid[5] == 'X') ||
+                (grid[6] == 'X' && grid[7] == 'X' && grid[8] == 'X') ||
+                (grid[0] == 'X' && grid[3] == 'X' && grid[6] == 'X') ||
+                (grid[1] == 'X' && grid[4] == 'X' && grid[7] == 'X') ||
+                (grid[2] == 'X' && grid[5] == 'X' && grid[8] == 'X') ||
+                (grid[0] == 'X' && grid[4] == 'X' && grid[8] == 'X') ||
+                (grid[2] == 'X' && grid[4] == 'X' && grid[6] == 'X');
+    }
+
+    public static boolean oWon(char[] grid) {
+
+        return (grid[0] == 'O' && grid[1] == 'O' && grid[2] == 'O') ||
+                (grid[3] == 'O' && grid[4] == 'O' && grid[5] == 'O') ||
+                (grid[6] == 'O' && grid[7] == 'O' && grid[8] == 'O') ||
+                (grid[0] == 'O' && grid[3] == 'O' && grid[6] == 'O') ||
+                (grid[1] == 'O' && grid[4] == 'O' && grid[7] == 'O') ||
+                (grid[2] == 'O' && grid[5] == 'O' && grid[8] == 'O') ||
+                (grid[0] == 'O' && grid[4] == 'O' && grid[8] == 'O') ||
+                (grid[2] == 'O' && grid[4] == 'O' && grid[6] == 'O');
     }
 }
